@@ -139,14 +139,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         formSuccess.classList.add('show');
 
                         setTimeout(() => {
-                            contactForm.reset();
-                            contactForm.querySelectorAll('.form-group, .btn-submit').forEach(el => {
-                                el.style.display = '';
-                            });
                             formSuccess.classList.remove('show');
-                            submitBtn.textContent = 'Send Message →';
-                            submitBtn.disabled = false;
-                        }, 4000);
+                            setTimeout(() => {
+                                contactForm.reset();
+                                contactForm.querySelectorAll('.form-group, .btn-submit').forEach(el => {
+                                    el.style.display = '';
+                                });
+                                submitBtn.textContent = 'Send Message →';
+                                submitBtn.disabled = false;
+                            }, 500);
+                        }, 5000);
                     } else {
                         alert('Oops! Something went wrong. Please try again.');
                         submitBtn.textContent = 'Send Message →';
@@ -180,4 +182,47 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // ========================================
+    // TYPING EFFECT
+    // ========================================
+    const typingText = document.getElementById('typing-text');
+    const roles = [
+        "Building digital experiences that inspire",
+        "Full Stack Developer",
+        "AI Enthusiast & Explorer",
+        "UI/UX Designer",
+        "Creative Problem Solver"
+    ];
+    let roleIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    let typeSpeed = 100;
+
+    function type() {
+        const currentRole = roles[roleIndex];
+
+        if (isDeleting) {
+            typingText.textContent = currentRole.substring(0, charIndex - 1);
+            charIndex--;
+            typeSpeed = 50;
+        } else {
+            typingText.textContent = currentRole.substring(0, charIndex + 1);
+            charIndex++;
+            typeSpeed = 100;
+        }
+
+        if (!isDeleting && charIndex === currentRole.length) {
+            isDeleting = true;
+            typeSpeed = 2000; // Pause at end
+        } else if (isDeleting && charIndex === 0) {
+            isDeleting = false;
+            roleIndex = (roleIndex + 1) % roles.length;
+            typeSpeed = 500;
+        }
+
+        setTimeout(type, typeSpeed);
+    }
+
+    if (typingText) type();
 });
